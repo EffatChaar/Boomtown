@@ -141,13 +141,11 @@ module.exports = function(postgres) {
     },
     async getTagsForItem(id) {
       const tagsQuery = {
-        text: `SELECT itm.title as items, tgs.title as tags
-          FROM items itm
-            iNNER JOIN itemtags mutual
-              ON itm.id = mutual.item.id
-            INNER JOIN tags tgs
-              ON mutual.tagid = tgs.id
-          WHERE item.id = $1`, // @TODO: Advanced queries
+        text: `SELECT items.title , tags.title
+        FROM items
+        INNER JOIN itemtags ON items.id = itemid
+        INNER JOIN tags ON tagid = tags.id
+        `, // @TODO: Advanced queries
         values: [id]
       }
 
@@ -162,9 +160,9 @@ module.exports = function(postgres) {
        *  It requires 3 separate INSERT statements.
        *
        *  All of the INSERT statements must:
-       *  1) Proceed in a specific order.
-       *  2) Succeed for the new Item to be considered added
-       *  3) If any of the INSERT queries fail, any successful INSERT
+       *  1- Proceed in a specific order.
+       *  2- Succeed for the new Item to be considered added
+       *  3- If any of the INSERT queries fail, any successful INSERT
        *     queries should be 'rolled back' to avoid 'orphan' data in the database.
        *
        *  To achieve #3 we'll ue something called a Postgres Transaction!
