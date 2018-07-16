@@ -92,7 +92,7 @@ module.exports = function(app) {
 
     Item: {
 
-      async itemowner(parent, id, { pgResource }, info) {
+      async itemowner(parent, { id }, { pgResource }, info) {
         try {
           const itemOwner = await pgResource.getUserById(parent.ownerid)
           return itemOwner
@@ -109,7 +109,7 @@ module.exports = function(app) {
       // -------------------------------
       async tags(parent, args, { pgResource }, info) {
       try {
-        const tagsForItem = await pgResource.getTagsForItem(parent.title)
+        const tagsForItem = await pgResource.getTagsForItem(parent.id)
         return tagsForItem
         } catch (e) {
           throw new ApolloError(e)

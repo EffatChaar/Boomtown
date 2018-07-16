@@ -59,23 +59,23 @@ module.exports = function(postgres) {
       }
       try {
         const user = await postgres.query(findUserQuery)
-        if (!user) throw 'User was not found.'
+        if (!user) throw 'No uer found.'
         return user.rows[0]
       } catch (e) {
-        throw 'User was not found.'
+        throw 'No user found.'
       }
     },
 
     async getItems(idToOmit) {
       try {
       const items = await postgres.query({
-        text: `SELECT * FROM items ${idToOmit ? 'WHERE items.ownerid != $1':''}`,
+        text: `SELECT * FROM items WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
         values: [idToOmit]
       })
-      if (!items) throw 'Items not found.'
+      if (!items) throw 'No items found.'
       return items.rows
       } catch (e) {
-      throw 'Items not found.'
+      throw 'No items found.'
       }
     },
 
@@ -98,33 +98,44 @@ module.exports = function(postgres) {
         text: `SELECT * FROM items WHERE borrowerid = $1;`,
         values: [id]
       })
-      if (!items) throw 'Items not found.'
+      if (!items) throw 'Item not found.'
       return items.rows
       } catch (e) {
-      throw 'Items not found.'
+      throw 'Item not found.'
       }
     },
 
     async getTags() {
-      const tags = await postgres.query({
-        text: `SELECT * FROM tags`  /* @TODO: Basic queries */
-      })
-      return tags.rows
-    },
+      try {
+        const tags = await postgres.query(`SELECT * FROM tags`)
+        if (!tags) throw 'No tags found.'
+        return tags.rows
+        } catch (e) {
+        throw 'No tags found.'
+        }
+      },
 
     async getTagsForItem(id) {
       const tagsQuery = {
-        text: `SELECT items.title , tags.title
-        FROM items
-        INNER JOIN itemtags ON items.id = itemid
-        INNER JOIN tags ON tagid = tags.id
-        `, // @TODO: Advanced queries
+        text: `SELECT tags.title, tags.id
+        FROM
+            tags
+            JOIN itemtags
+            ON itemtags.tagid = tags.id
+            JOIN items
+            ON itemtags.itemid = items.id
+        where
+            items.id = $1`,
         values: [id]
       }
-
-      const tags = await postgres.query(tagsQuery)
-      return tags.rows
-    },
+      try {
+        const tags = await postgres.query(tagsQuery)
+        if (!tags) throw 'Tags not found.'
+        return tags.rows
+        } catch (e) {
+        throw 'Tags not found.'
+        }
+      },
     async saveNewItem({ item, image, user }) {
       /**
        *  @TODO: Adding a New Item
