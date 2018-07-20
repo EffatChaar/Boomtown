@@ -39,7 +39,7 @@ import Routes from './routes/index'
  * of the app's children, and pass it the imported `store` as the `store`
  * prop's value.
  */
-import store from './redux'
+// import store from './redux'
 /**
  * @TODO: Add the Viewer Context
  *
@@ -59,6 +59,7 @@ const App = () => {
       <CssBaseline />
       <ApolloProvider client={client}>
         <Router>
+          <Routes/>
         </Router>
       </ApolloProvider>
     </MuiThemeProvider>

@@ -31,8 +31,8 @@ const ItemFields = gql`
 `
 
 export const ITEM_QUERY = gql`
-  query item($id: ID!) {
-   items(id: $id) {
+  query item {
+   items {
      ...ItemFields
    }
   }
@@ -40,8 +40,8 @@ export const ITEM_QUERY = gql`
 `
 
 export const ALL_ITEMS_QUERY = gql`
-  query items($filter: ID) {
-    items(filter: $filter) {
+  query items($id: ID) {
+    items(filter: $id) {
       ...ItemFields
     }
   }

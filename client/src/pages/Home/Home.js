@@ -7,17 +7,11 @@ import AccountForm from '../../components/AccountForm'
 import styles from './styles'
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
+import {ALL_TAGS_QUERY, ALL_USER_ITEMS_QUERY, ALL_ITEMS_QUERY} from '../../apollo/queries';
 
-const GET_TAGS = gql`
-  {
-    tags {
-      title
-    }
-  }
-`;
 
 const Home = ({ classes }) => (
-    <Query query={GET_TAGS}>
+    <Query query={ALL_ITEMS_QUERY} variables={{"id": 1 }} >
     {({ loading, error, data}) => {
       if (loading) return 'Loading...'
       if (error) return `Error!' ${error.message}`
