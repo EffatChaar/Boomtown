@@ -11,12 +11,7 @@ const postgres = initDB(app)
 let pgResource = require('./api/pg-resource')
 pgResource = pgResource(postgres)
 
-/**
- * @TODO: Initialize Apollo Server
- *
- * When you've completed your schema, configured and connected to Postgres
- * you're ready to start your Apollo Server.
- */
+
  const initApollo = require('./config/apollo')
  initApollo({ app, pgResource })
 
@@ -29,9 +24,7 @@ postgres.on('error', (err, client) => {
 const server = app.listen(PORT, () => {
   console.log(`>>\x1b[34m Express running:\x1b[0m http://localhost:${PORT}`)
 
-  /**
-   *  @TODO: Initialize Apollo Server
-   */
+ 
 
    console.log(
     `>>\x1b[35m Graphql playground:\x1b[0m http://localhost:${PORT}/graphql`

@@ -52,9 +52,9 @@ module.exports = function(app) {
           throw new ApolloError(e)
         }
       },
-      async items(parent, { item }, { pgResource }, info) {
+      async items(parent,{filter}, { pgResource }, info) {
         try {
-          const items = await pgResource.getItems(item)
+          const items = await pgResource.getItems(filter)
           return items
         }   catch (e) {
           throw new ApolloError(e)
@@ -72,23 +72,23 @@ module.exports = function(app) {
 
     User: {
 
-      async items(parent, { id }, { pgResource }, info) {
+      async items(parent, vars, { pgResource }, info) {
         try {
           const itemsForUser = await pgResource.getItemsForUser(parent.id)
           return itemsForUser
           }   catch (e) {
           throw new ApolloError(e)
           }
-        },
-        async borrowed(parent, { id }, { pgResource }, info) {
+      },
+      async borrowed(parent, vars, { pgResource }, info) {
           try {
             const borrowedItemsForUser = await pgResource.getBorrowedItemsForUser(parent.id)
             return borrowedItemsForUser
             } catch (e) {
             throw new ApolloError(e)
             }
-          }
-        },
+        }
+      },
 
     Item: {
 

@@ -43,23 +43,22 @@ module.exports = function(postgres) {
         text: '', // @TODO: Authentication - Server
         values: [email]
       }
-      try {
-        const user = await postgres.query(findUserQuery)
-        if (!user) throw 'User was not found.'
-        return user.rows[0]
-      } catch (e) {
-        throw 'User was not found.'
-      }
+      // try {
+      //   // const user = await postgres.query(findUserQuery)
+      // //   if (!user) throw 'User was not found.'
+      // //   return user.rows[0]
+      // // } catch (e) {
+      // //   throw 'User was not found.'
+      // }
     },
     async getUserById(id) {
 
       const findUserQuery = {
-        text: `SELECT * FROM users WHERE id = $1'`,
+        text: `SELECT * FROM users WHERE users.id = $1;`,
         values: [id]
       }
       try {
         const user = await postgres.query(findUserQuery)
-        if (!user) throw 'No uer found.'
         return user.rows[0]
       } catch (e) {
         throw 'No user found.'
@@ -67,12 +66,15 @@ module.exports = function(postgres) {
     },
 
     async getItems(idToOmit) {
+      let text = `SELECT * FROM items;`
+      if(idToOmit){
+        text = `SELECT * FROM items WHERE items.ownerid !=$1 AND items.borrowerid is NULL;`
+      }
       try {
       const items = await postgres.query({
-        text: `SELECT * FROM items WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
-        values: [idToOmit]
+        text: text,
+        values: idToOmit ? [idToOmit] : []
       })
-      if (!items) throw 'No items found.'
       return items.rows
       } catch (e) {
       throw 'No items found.'
