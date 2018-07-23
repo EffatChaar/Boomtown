@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Menu from './Menu/Menu';
 import { Link } from 'react-router-dom';
 import Boomtown from './../../images/Boomtown.svg'
+import AddButton from './AddButton/AddButton'
 
 const styles = {
   root: {
@@ -24,6 +25,11 @@ const styles = {
     display:'flex',
     flexDirection:'row',
     justifyContent:'space-between'
+  },
+  ShareButton:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 };
 
@@ -36,7 +42,15 @@ function ButtonAppBar(props) {
           <Link to="./items">
             <img src={Boomtown} alt='Boomtown-logo' style={{display:"inline", maxHeight:"50px"}}/>
           </Link>
-          <Menu />
+        <div className={classes.ShareButton}>
+            <Link to="./share">
+              <AddButton />
+              <text>
+                SHARE SOMETHING
+              </text>
+            </Link>
+            <Menu />
+        </div>
         </Toolbar>
       </AppBar>
     </div>
