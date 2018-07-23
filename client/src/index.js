@@ -51,7 +51,7 @@ import Routes from './routes/index'
  */
 import Home from './pages/Home'
 import './index.css'
-import ItemsContainer from './containers/ItemsContainer';
+// import ItemsContainer from './containers/ItemsContainer';
 
 const App = () => {
   return (
