@@ -4,12 +4,14 @@ import styles from './styles'
 import ItemsContainer from'../../containers/ItemsContainer'
 import Grid from '@material-ui/core/Grid'
 import Header from '../../components/Header/AppBar'
+import ItemElement from '../../components/ItemElement/ItemElement';
 
 
 const Items = ({ classes }) => {
   return (
     <div>
       <Header />
+      <ItemElement />
       <ItemsContainer>
         {({ itemsData: { items, loading, error } }) => {
         if (loading ) {
