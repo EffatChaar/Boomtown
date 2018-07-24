@@ -20,11 +20,11 @@ const Items = ({ classes }) => {
         if (error) {
           return 'error'
         }
-        return items.map(item => (
-          console.log('hi')
-        )
-        )}
-        }
+        return items.map( item => {
+          <ItemElement />
+        })
+      }
+    }
       </ItemsContainer>
     </div>
 )}

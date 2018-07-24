@@ -16,7 +16,7 @@ import {
 const itemsData = ({ render }) => {
   return (
     <Query query={ALL_ITEMS_QUERY} variables={{ id: 1 }}>
-      {({ data: { items }, loading, error }) => render({items, loading, error})}
+      {({ data: items, loading, error }) => render({items, loading, error})}
     </Query>
   );
 }

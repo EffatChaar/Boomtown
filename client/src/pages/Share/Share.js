@@ -1,14 +1,13 @@
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
-
 import styles from './styles'
+import ItemShare from '../../components/ItemShare/ItemShare'
 
 const Share = ({ classes }) => {
   return (
     <div>
-      <p>
-        This is the share page located at <code>/share</code>.
-      </p>
+      <ItemShare />
+    
     </div>
   )
 }
