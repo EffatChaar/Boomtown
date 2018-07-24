@@ -24,22 +24,24 @@ const itemsData = ({ render }) => {
 }
   
 const userItemsData = ({ userId, render }) => {
-  return (
-    <Query query={ALL_USER_ITEMS_QUERY} variables={{ id: 2 }}>
-    {({ loading, error, data: { users } }) =>
-      render({ loading, error, users })
-    }
-  </Query>
-);
+  return null
+  // return (
+//   //   <Query query={ALL_USER_ITEMS_QUERY} variables={{ id: 2 }}>
+//   //   {({ loading, error, data: { users } }) =>
+//   //     render({ loading, error, users })
+//   //   }
+//   // </Query>
+// );
 
 }
 
 const tagData = ({ render }) => {
-  return (
-    <Query query={ALL_TAGS_QUERY}>
-        {({ loading, error, data: { tags } }) => render({ loading, error, tags })}
-    </Query>
-  );
+  return null
+  // return (
+  //   <Query query={ALL_TAGS_QUERY}>
+  //       {({ loading, error, data: { tags } }) => render({ loading, error, tags })}
+  //   </Query>
+  // );
 }
 
 // const addItem = ({ render }) => {
@@ -49,7 +51,7 @@ const tagData = ({ render }) => {
 const ItemsContainer = adopt({
   tagData,
   itemsData,
-  userItemsData,
+  // userItemsData,
   // addItem
 })
 

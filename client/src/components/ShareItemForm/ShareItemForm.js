@@ -62,6 +62,15 @@ class ShareItemForm extends Component {
   render() {
     const { resetImage, updateNewItem, resetNewItem } = this.props
     return (
+    <ItemsContainer>
+      {({ tagData: { tags, loading, error } }) => {
+        if (loading) {
+          return 'Content Loading...'
+        }
+        if (error) {
+          return `error: ${error.message}`
+        }
+        return(
       <Form
         onSubmit={this.onSubmit}
         validate={this.validate}
@@ -97,15 +106,7 @@ class ShareItemForm extends Component {
                 />
               )}
             </Field>
-            <ItemsContainer>
-              {({ tagData: { tags, loading, error } }) => {
-                if (loading) {
-                  return 'Content Loading...'
-                }
-                if (error) {
-                  return `error: ${error.message}`
-                }
-                return tags.map(tag => (
+             {tags && tags.map(tag => (
                   <Field
                     key={tag.id}
                     name="tags"
@@ -119,9 +120,8 @@ class ShareItemForm extends Component {
                       </InputLabel>
                     )}
                   </Field>
-                ))
-              }}
-            </ItemsContainer>
+                ))}
+              
             <Field
               render={({ input, meta }) => (
                 <Button type="submit" variant="contained" color="primary">
@@ -133,7 +133,8 @@ class ShareItemForm extends Component {
           </form>
         )}
       />
-    )
+    )}}
+    </ItemsContainer>)
   }
 }
 
