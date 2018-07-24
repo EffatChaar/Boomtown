@@ -4,10 +4,14 @@ import { MuiThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ApolloProvider } from 'react-apollo'
 import { BrowserRouter as Router} from 'react-router-dom'
-// import { Provider as ReduxProvider } from 'react-redux'
+import { Provider as ReduxProvider } from 'react-redux'
 import client from './apollo'
 import registerServiceWorker from './registerServiceWorker'
 import theme from './theme'
+import Routes from './routes/index'
+import store from './redux/index'
+import Home from './pages/Home'
+import './index.css'
 
 /**
  * @TODO: Initialize Apollo Client
@@ -24,7 +28,7 @@ import theme from './theme'
  *
  * Uncomment the following line when your routes are configured
  */
-import Routes from './routes/index'
+
  /*
  * Below in your <App />, nest your <Routes /> inside of <BrowserRouter />
  * component to enable routing in your client app.
@@ -39,7 +43,7 @@ import Routes from './routes/index'
  * of the app's children, and pass it the imported `store` as the `store`
  * prop's value.
  */
-// import store from './redux'
+
 /**
  * @TODO: Add the Viewer Context
  *
@@ -49,20 +53,21 @@ import Routes from './routes/index'
  * the <BrowserRouter /> component so the router is aware of whether a
  * user is currently logged in and who that user is.
  */
-import Home from './pages/Home'
-import './index.css'
+
 // import ItemsContainer from './containers/ItemsContainer';
 
 const App = () => {
   return (
+    <ReduxProvider store={store}>
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <ApolloProvider client={client}>
         <Router>
           <Routes/>
         </Router>
-      </ApolloProvider>
+        </ApolloProvider>
     </MuiThemeProvider>
+  </ReduxProvider>
   )
 }
 

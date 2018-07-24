@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import Boomtown from './../../images/Boomtown.svg'
 import AddButton from './AddButton/AddButton'
 
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -45,9 +46,7 @@ function ButtonAppBar(props) {
         <div className={classes.ShareButton}>
             <Link to="./share">
               <AddButton />
-              <text>
-                SHARE SOMETHING
-              </text>
+             
             </Link>
             <Menu />
         </div>
