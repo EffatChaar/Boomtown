@@ -1,32 +1,33 @@
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
+import ItemsContainer from '../../containers/ItemsContainer'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import ItemCard from '../../components/ItemCard'
 import styles from './styles'
-import ItemsContainer from'../../containers/ItemsContainer'
-import Grid from '@material-ui/core/Grid'
-import Header from '../../components/Header/AppBar'
-import ItemCard from '../../components/ItemCard/ItemCard';
 
 
 const Items = ({ classes }) => {
   return (
     <div>
-      <Header />
-      <ItemCard />
-      <ItemsContainer>
+        <ItemsContainer>
         {({ itemsData: { items, loading, error } }) => {
-        if (loading ) {
-        return 'loading'
-        }
-        if (error) {
-          return 'error'
-        }
-        return items.map( item => {
-          console.log('hi')
-        })
-      }
-    }
-      </ItemsContainer>
+          if (loading) {
+            return 'Content Loading...'
+          }
+          if (error) {
+            return `error: ${error.message}`
+          }
+          return items.map(item => (
+            <ItemCard key={ item.id } item={ item }/>
+          ))
+        }}
+      </ItemsContainer> 
     </div>
-)}
+  )
+}
 
 export default withStyles(styles)(Items)

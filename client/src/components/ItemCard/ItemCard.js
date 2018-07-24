@@ -8,6 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import styles from './styles'
+import Items from '../../pages/Items';
 
 
 class ItemCard extends Component {

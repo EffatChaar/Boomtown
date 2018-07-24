@@ -6,48 +6,50 @@ import React from 'react'
 
 
 import {
-  // ALL_TAGS_QUERY,
+  ALL_TAGS_QUERY,
   ALL_ITEMS_QUERY,
-  // ALL_USER_ITEMS_QUERY,
+  ALL_USER_ITEMS_QUERY,
   // ADD_ITEM_MUTATION
 } from '../apollo/queries'
 
 
 const itemsData = ({ render }) => {
   return (
-    <Query query={ALL_ITEMS_QUERY} variables={{ id: 1 }}>
-      {({ data: items, loading, error }) => render({items, loading, error})}
+    <Query query={ALL_ITEMS_QUERY} >
+      {({ loading, error, data: { items } }) =>
+        render({ loading, error, items })
+      }
     </Query>
   );
 }
   
 const userItemsData = ({ userId, render }) => {
-  return undefined
-  // return (
-  //   <Query query={ALL_USER_ITEMS_QUERY} variables={{ filter: null }}>
-  //     {({ data: { items }, loading, error }) => render({items, loading, error})}
-  //   </Query>
-// );
+  return (
+    <Query query={ALL_USER_ITEMS_QUERY} variables={{ id: 2 }}>
+    {({ loading, error, data: { users } }) =>
+      render({ loading, error, users })
+    }
+  </Query>
+);
 
 }
 
 const tagData = ({ render }) => {
-  return undefined
-  // return (
-  // <Query query={ALL_TAGS_QUERY} variables={{ id: null }}>
-  //     {({ data: { items }, loading, error }) => render({items, loading, error})}
-  //   </Query>
-// );
+  return (
+    <Query query={ALL_TAGS_QUERY}>
+        {({ loading, error, data: { tags } }) => render({ loading, error, tags })}
+    </Query>
+  );
 }
 
-const addItem = ({ render }) => {
-  return undefined
-}
+// const addItem = ({ render }) => {
+//   return undefined
+// }
 
 const ItemsContainer = adopt({
-  // tagData,
+  tagData,
   itemsData,
-  // userItemsData,
+  userItemsData,
   // addItem
 })
 
