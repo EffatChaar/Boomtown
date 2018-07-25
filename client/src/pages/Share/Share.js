@@ -1,23 +1,20 @@
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
-// import styles from './styles'
-import ShareItemPreview from '../../components/ShareItemPreview/ShareItemPreview'
+import { Grid } from '@material-ui/core'
 import ShareItemForm from '../../components/ShareItemForm/ShareItemForm'
-
-const styles = {
-  sharePage: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-};
+import ShareItemPreview from '../../components/ShareItemPreview'
+import styles from './styles'
 
 const Share = ({ classes }) => {
   return (
-    <div className="sharePage">
-      <ShareItemPreview />
-      <ShareItemForm />
-    
-    </div>
+      <Grid container spacing={24}>
+        <Grid item xs={12}>
+          <ShareItemPreview />
+        </Grid>
+        <Grid item xs={12}>
+          <ShareItemForm />
+        </Grid>
+      </Grid>
   )
 }
 

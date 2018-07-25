@@ -1,42 +1,46 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl'
+import Grid from '@material-ui/core/Grid'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import React, { Component } from 'react'
+import {
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions
+} from '@material-ui/core'
 import styles from './styles'
-import Items from '../../pages/Items';
-
 
 class ItemCard extends Component {
   render() {
     const { classes, item } = this.props
+    const itemTags = item.tags.map(tag => tag.title)
     return (
-    <div>
       <Card className={classes.card}>
         <CardMedia
-          className = {classes.media}
-          image = {item.imageUrl}
+          className={classes.media}
+          image={item.imageUrl}
         />
         <CardContent>
           <Typography gutterBottom variant="headline" component="h2">
             {item.title}
           </Typography>
           <Typography component="p">
-            {item.description}
+            {itemTags.join(', ')}
           </Typography>
+          <Typography component="p">{item.description}</Typography>
         </CardContent>
         <CardActions>
-          <Button variant="outlined" size="small" color="default">
+          <Button variant="contained" color="primary">
             Borrow
           </Button>
         </CardActions>
       </Card>
-    </div>
-  );}
+    )
+  }
 }
 
 export default withStyles(styles)(ItemCard)

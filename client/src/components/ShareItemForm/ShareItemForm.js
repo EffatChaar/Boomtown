@@ -3,7 +3,11 @@ import { FormSpy, Form, Field } from 'react-final-form'
 import { Button, TextField, Checkbox, InputLabel } from '@material-ui/core'
 import ItemsContainer from '../../containers/ItemsContainer'
 import { connect } from 'react-redux'
-import { resetImage, updateNewItem, resetNewItem } from '../../redux/modules/ShareItemPreview'
+import {
+  resetImage,
+  updateNewItem,
+  resetNewItem
+} from '../../redux/modules/ShareItemPreview'
 
 class ShareItemForm extends Component {
   constructor(props) {
@@ -20,7 +24,6 @@ class ShareItemForm extends Component {
   validate = values => {
     console.log(values)
   }
-
   getBase64Url() {
     return new Promise(resolve => {
       const reader = new FileReader()
@@ -34,17 +37,22 @@ class ShareItemForm extends Component {
       reader.readAsBinaryString(this.state.fileSelected)
     })
   }
-
-  applyTags(tags) {
-    return (
-      tags &&
-      tags
-        .filter(tag => this.state.selectedTags.indexOf(tag.id) > -1)
-        .map(tag => ({ title: tag.title, id: tag.id }))
-    )
+  // applyTags(tags) {
+  //   return (
+  //     tags &&
+  //     tags
+  //       .filter(tag => this.state.selectedTags.indexOf(tag.id) > -1)
+  //       .map(tag => ({ title: tag.title, id: tag.id }))
+  //   )
+  // }
+  getTags = tags => {
+    if(tags) {
+      return tags.map(tag => JSON.parse(tag))
+    }
+    return []
   }
 
-  dispatchUpdate(values, tags, updateNewItem) {
+  dispatchUpdate(values, updateNewItem) {
     if (!values.imageUrl && this.state.fileSelected) {
       this.getBase64Url().then(imageUrl => {
         updateNewItem({
@@ -53,60 +61,63 @@ class ShareItemForm extends Component {
       })
     }
 
+    const tags = this.getTags(values.tags)
     updateNewItem({
       ...values,
-      tags: this.applyTags(tags)
+      tags
     })
+  }
+  handleCheckbox(event) {
   }
 
   render() {
     const { resetImage, updateNewItem, resetNewItem } = this.props
     return (
-    <ItemsContainer>
-      {({ tagData: { tags, loading, error } }) => {
-        if (loading) {
-          return 'Content Loading...'
-        }
-        if (error) {
-          return `error: ${error.message}`
-        }
-        return(
-      <Form
-        onSubmit={this.onSubmit}
-        validate={this.validate}
-        render={({ handleSubmit, pristine, invalid, values }) => (
-          <form onSubmit={handleSubmit}>
-            <FormSpy
-              subscription={{ values: true }}
-              component={({ values }) => {
-                if (values) {
-                  this.dispatchUpdate(values, tags, updateNewItem)
-                }
-                return ''
-              }}
-            />
-            <Field
-              render={({ input, meta }) => (
-                <Button variant="contained" color="default">
-                  Select an image
-                </Button>
-              )}
-            />
-            <Field name="ItemName">
-              {({ input, meta }) => (
-                <TextField placeholder="Name your Item" {...input} />
-              )}
-            </Field>
-            <Field name="Description">
-              {({ input, meta }) => (
-                <TextField
-                  placeholder="Describe your Item"
-                  multiline
-                  {...input}
+      <ItemsContainer>
+        {({ tagData: { loading, error, tags  } }) => {
+          if (loading) {
+            return 'Content Loading...'
+          }
+          if (error) {
+            return `error: ${error.message}`
+          }
+          return (
+          <Form
+            onSubmit={this.onSubmit}
+            validate={this.validate}
+            render={({ handleSubmit, pristine, invalid, values }) => (
+              <form onSubmit={handleSubmit}>
+                <FormSpy
+                  subscription={{ values: true }}
+                  component={({ values }) => {
+                    if (values) {
+                      this.dispatchUpdate(values, updateNewItem)
+                    }
+                    return ''
+                  }}
                 />
-              )}
-            </Field>
-             {tags && tags.map(tag => (
+                <Field
+                  render={({ input, meta }) => (
+                    <Button variant="contained" color="primary">
+                      Select an image
+                    </Button>
+                  )}
+                />
+                <Field name="title">
+                  {({ input, meta }) => (
+                    <TextField placeholder="Name your Item" {...input} />
+                  )}
+                </Field>
+                <Field name="description">
+                  {({ input, meta }) => (
+                    <TextField
+                      placeholder="Describe your Item"
+                      multiline
+                      {...input}
+                    />
+                  )}
+                </Field>
+                {tags && tags.map(tag => (
                   <Field
                     key={tag.id}
                     name="tags"
@@ -116,30 +127,31 @@ class ShareItemForm extends Component {
                     {({ input, meta }) => (
                       <InputLabel>
                         <Checkbox {...input} />
-                        {tag.title}
+                          {tag.title}
                       </InputLabel>
                     )}
                   </Field>
-                ))}
-              
-            <Field
-              render={({ input, meta }) => (
-                <Button type="submit" variant="contained" color="primary">
-                  Share
-                </Button>
-              )}
-            />
-            <pre>{JSON.stringify(values, 0, 2)}</pre>
-          </form>
-        )}
-      />
-    )}}
-    </ItemsContainer>)
+                ))}              
+                <Field
+                  render={({ input, meta }) => (
+                    <Button type="submit" variant="contained" color="primary">
+                      Share
+                    </Button>
+                  )}
+                />
+                <pre>{JSON.stringify(values, 0, 2)}</pre>
+              </form>
+            )}
+          />
+          )
+        }}
+      </ItemsContainer>
+    )
   }
 }
-
 const mapDispatchToProps = dispatch => ({
   updateNewItem(item) {
+    console.log(item)
     dispatch(updateNewItem(item))
   },
   resetNewItem() {
@@ -152,4 +164,5 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(
   undefined,
-  mapDispatchToProps)(ShareItemForm)
+  mapDispatchToProps
+)(ShareItemForm)
