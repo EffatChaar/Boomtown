@@ -8,6 +8,7 @@ module.exports = function(app) {
     database: app.get('PG_DB'),
     port: app.get('PG_PORT'),
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000  
+    connectionTimeoutMillis: 2000
+    
   })
 }

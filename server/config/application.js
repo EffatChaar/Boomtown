@@ -13,6 +13,9 @@ module.exports = function(app) {
   app.set('PG_DB', process.env.PG_DB || 'boomtown')
   app.set('PG_PORT', process.env.PG_PORT || 5432)
 
+  app.set('JWT_COOKIE_NAME', 'jwtcookie')
+  app.set('JWT_SECRET', 'secret')
+
   app.use(cookieParser())
 
   if (process.env.NODE_ENV === 'production') {

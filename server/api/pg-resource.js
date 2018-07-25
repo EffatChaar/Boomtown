@@ -21,7 +21,7 @@ module.exports = function(postgres) {
   return {
     async createUser({ fullname, email, password }) {
       const newUserInsert = {
-        text: '', // @TODO: Authentication - Server
+        text: 'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3);',
         values: [fullname, email, password]
       }
       try {
@@ -43,13 +43,13 @@ module.exports = function(postgres) {
         text: '', // @TODO: Authentication - Server
         values: [email]
       }
-      // try {
-      //   // const user = await postgres.query(findUserQuery)
-      // //   if (!user) throw 'User was not found.'
-      // //   return user.rows[0]
-      // // } catch (e) {
-      // //   throw 'User was not found.'
-      // }
+      try {
+        const user = await postgres.query(findUserQuery)
+        if (!user) throw 'User was not found.'
+        return user.rows[0]
+      } catch (e) {
+        throw 'User was not found.'
+      }
     },
     async getUserById(id) {
 
