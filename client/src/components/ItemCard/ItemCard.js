@@ -22,7 +22,7 @@ class ItemCard extends Component {
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}
-          image={item.imageUrl}
+          image={item.imageurl}
         />
         <CardContent>
           <Typography gutterBottom variant="headline" component="h2">

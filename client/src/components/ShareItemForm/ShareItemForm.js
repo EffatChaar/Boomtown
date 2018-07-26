@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { FormSpy, Form, Field } from 'react-final-form'
 import { Button, TextField, Checkbox, InputLabel } from '@material-ui/core'
 import ItemsContainer from '../../containers/ItemsContainer'
@@ -8,14 +8,18 @@ import {
   updateNewItem,
   resetNewItem
 } from '../../redux/modules/ShareItemPreview'
+import Typography from '@material-ui/core/Typography'
+import { classes } from '@material-ui/core/styles';
+import styles from './styles'
 
 class ShareItemForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fileSelected: false,
-      selectedTags: [],
-      submitted: false
+      // selectedTags: [],
+      // submitted: false
+      imageurl: ''
     }
   }
   onSubmit = values => {
@@ -23,6 +27,9 @@ class ShareItemForm extends Component {
   }
   validate = values => {
     console.log(values)
+  }
+  handleImageSelect = e => {
+    this.setState({ fileSelected :e.target.files[0]})
   }
   getBase64Url() {
     return new Promise(resolve => {
@@ -45,14 +52,14 @@ class ShareItemForm extends Component {
   //       .map(tag => ({ title: tag.title, id: tag.id }))
   //   )
   // }
-  getTags = tags => {
+getTags = tags => {
     if(tags) {
       return tags.map(tag => JSON.parse(tag))
     }
     return []
-  }
+}
 
-  dispatchUpdate(values, updateNewItem) {
+dispatchUpdate(values, updateNewItem) {
     if (!values.imageUrl && this.state.fileSelected) {
       this.getBase64Url().then(imageUrl => {
         updateNewItem({
@@ -66,12 +73,35 @@ class ShareItemForm extends Component {
       ...values,
       tags
     })
-  }
-  handleCheckbox(event) {
-  }
+}
 
+
+handleCheckbox(event) {}
+
+async saveItem(values, tags, addItem) {
+  const {
+    validity,
+    files: [file]
+  } = this.fileInput.current
+  if (!validity.valid || !file) return;
+    try {
+      const itemData = {
+        ...values,
+        tags: this.applyTags(tags)
+      }
+      await addItem.mutation({
+        variables: {
+          item: itemData,
+          image: file
+        }
+      })
+      this.setState({ done: true })
+    } catch(e) {
+      console.log(e)
+    }
+  }
   render() {
-    const { resetImage, updateNewItem, resetNewItem } = this.props
+    const { classes, updateNewItem, resetNewItem } = this.props
     return (
       <ItemsContainer>
         {({ tagData: { loading, error, tags  } }) => {
@@ -83,27 +113,53 @@ class ShareItemForm extends Component {
           }
           return (
           <Form
-            onSubmit={this.onSubmit}
-            validate={this.validate}
-            render={({ handleSubmit, pristine, invalid, values }) => (
-              <form onSubmit={handleSubmit}>
+            onSubmit={values => {
+              this.saveItem(values, tags, addItem)
+            }}
+            validate={validate.bind(this)}
+            render={({
+              handleSubmit,
+              pristine,
+              submitting,
+              invalid,
+              form
+            }) => (
+              <form onSubmit={handleSubmit} className={classes.ShareItemForm}>
                 <FormSpy
                   subscription={{ values: true }}
                   component={({ values }) => {
                     if (values) {
-                      this.dispatchUpdate(values, updateNewItem)
+                      this.dispatchUpdate(values, tags, updateNewItem)
                     }
                     return ''
                   }}
                 />
-                <Field
-                  render={({ input, meta }) => (
-                    <Button variant="contained" color="default">
-                      Select image
-                    </Button>
+
+                <Typography variant="display4" className={classes.headline} >
+                  Share. Borrow. Prosper.
+                </Typography>
+                <Field name="imageurl" >
+                  {(input, meta) => (
+                    <Fragment>
+                      <Button
+                        onClick={() => {
+                          this.fileRef.current.click()
+                          // Todo
+                        }}
+                      >
+                        Upload an image!
+                      </Button>
+                      <input
+                        onChange={e => this.handleImageSelect(e)}
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        ref={this.fileRef}
+                      />
+                    </Fragment>
                   )}
-                />
-                <Field name="title">
+                  </Field>
+                  <Field name="title">
                   {({ input, meta }) => (
                     <TextField placeholder="Name your Item" {...input} />
                   )}

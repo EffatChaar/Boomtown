@@ -83,7 +83,7 @@ module.exports = gql`
     login(
       email: String!,
       password: String!
-    ): Boolean
+    ): User!
     logout: Boolean
   }
 `

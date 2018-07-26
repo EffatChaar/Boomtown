@@ -1,6 +1,7 @@
 import { adopt } from 'react-adopt'
 import { Query } from 'react-apollo'
 import React from 'react'
+import Mutation from 'react'
 
 // import { ViewerContext } from '../context/ViewerProvider'
 
@@ -8,15 +9,15 @@ import {
   ALL_TAGS_QUERY,
   ALL_ITEMS_QUERY,
   ALL_USER_ITEMS_QUERY,
-  // ADD_ITEM_MUTATION
+  ADD_ITEM_MUTATION
 } from '../apollo/queries'
 
 
 const itemsData = ({ render }) => {
   return (
     <Query query={ALL_ITEMS_QUERY} >
-      {({ data: { items }, loading, error }) =>
-        render({ items, loading, error })
+      {({ loading, error, data: { items } }) =>
+        render({ loading, error, items })
       }
     </Query>
   )
@@ -25,8 +26,8 @@ const itemsData = ({ render }) => {
 const userItemsData = ({ userId, render }) => {
   return (
     <Query query={ALL_USER_ITEMS_QUERY} variables={{ id: 2 }} >
-    {({ loading, error, data: { users } }) =>
-      render({ loading, error, users })
+    {({ loading, error, data: { user } }) =>
+      render({ loading, error, user })
     }
   </Query>
   )
@@ -41,15 +42,21 @@ const tagData = ({ render }) => {
   )
 }
 
-// const addItem = ({ render }) => {
-//   return undefined
-// }
+const addItem = ({ render }) => (
+  <Mutation 
+    mutation={ADD_ITEM_MUTATION}
+    >
+    {(mutation, { data, loading, error }) => {
+      render({ mutation, data, error, loading })
+    }}
+    </Mutation>
+  )
 
 const ItemsContainer = adopt({
   itemsData,
   userItemsData,
-  tagData
-  // addItem
+  tagData,
+  addItem
 })
 
 export default ItemsContainer
