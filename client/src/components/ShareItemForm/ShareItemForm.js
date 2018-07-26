@@ -76,7 +76,7 @@ class ShareItemForm extends Component {
       <ItemsContainer>
         {({ tagData: { loading, error, tags  } }) => {
           if (loading) {
-            return 'Content Loading...'
+            return 'Loading...'
           }
           if (error) {
             return `error: ${error.message}`
@@ -98,8 +98,8 @@ class ShareItemForm extends Component {
                 />
                 <Field
                   render={({ input, meta }) => (
-                    <Button variant="contained" color="primary">
-                      Select an image
+                    <Button variant="contained" color="default">
+                      Select image
                     </Button>
                   )}
                 />
@@ -134,12 +134,12 @@ class ShareItemForm extends Component {
                 ))}              
                 <Field
                   render={({ input, meta }) => (
-                    <Button type="submit" variant="contained" color="primary">
+                    <Button type="submit" variant="contained" color="secondary">
                       Share
                     </Button>
                   )}
                 />
-                <pre>{JSON.stringify(values, 0, 2)}</pre>
+                {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
               </form>
             )}
           />

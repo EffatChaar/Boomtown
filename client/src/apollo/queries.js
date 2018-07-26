@@ -14,34 +14,34 @@ const ItemFields = gql`
     tags {
       id
       title
-      }
+    }
     itemowner {
       id
       fullname
       email
       bio
-      }
+    }
     borrower {
       id
       fullname
       email
       bio
-      }
     }
+  }
 `
 
 export const ITEM_QUERY = gql`
-  query item {
-   items {
+  query item($id: ID!) {
+    item {
      ...ItemFields
-   }
+    }
   }
   ${ItemFields}
 `
 
 export const ALL_ITEMS_QUERY = gql`
-  query items($id: ID) {
-    items(filter: $id) {
+  query ($filter: ID) {
+    items (filter: $filter) {
       ...ItemFields
     }
   }
@@ -49,9 +49,15 @@ export const ALL_ITEMS_QUERY = gql`
 `
 
 export const ALL_USER_ITEMS_QUERY = gql`
-  query user($id: ID!) {
+  query ($id: ID!) {
     user(id: $id) {
+      fullname
+      email
+      bio
       items {
+        ...ItemFields
+      }
+      borrowed {
         ...ItemFields
       }
     }
@@ -60,7 +66,7 @@ export const ALL_USER_ITEMS_QUERY = gql`
 `
 
 export const ALL_TAGS_QUERY = gql`
-  query tags{
+  query {
     tags {
       title
     }

@@ -1,9 +1,8 @@
 import { adopt } from 'react-adopt'
-import { Query, Mutation } from 'react-apollo'
+import { Query } from 'react-apollo'
 import React from 'react'
 
 // import { ViewerContext } from '../context/ViewerProvider'
-
 
 import {
   ALL_TAGS_QUERY,
@@ -16,32 +15,30 @@ import {
 const itemsData = ({ render }) => {
   return (
     <Query query={ALL_ITEMS_QUERY} >
-      {({ loading, error, data: { items } }) =>
-        render({ loading, error, items })
+      {({ data: { items }, loading, error }) =>
+        render({ items, loading, error })
       }
     </Query>
-  );
+  )
 }
   
 const userItemsData = ({ userId, render }) => {
-  return null
-  // return (
-//   //   <Query query={ALL_USER_ITEMS_QUERY} variables={{ id: 2 }}>
-//   //   {({ loading, error, data: { users } }) =>
-//   //     render({ loading, error, users })
-//   //   }
-//   // </Query>
-// );
-
+  return (
+    <Query query={ALL_USER_ITEMS_QUERY} variables={{ id: 2 }} >
+    {({ loading, error, data: { users } }) =>
+      render({ loading, error, users })
+    }
+  </Query>
+  )
 }
 
 const tagData = ({ render }) => {
-  return null
-  // return (
-  //   <Query query={ALL_TAGS_QUERY}>
-  //       {({ loading, error, data: { tags } }) => render({ loading, error, tags })}
-  //   </Query>
-  // );
+  return (
+    <Query query={ALL_TAGS_QUERY} >
+        {({ loading, error, data: { tags } }) =>
+        render({ loading, error, tags })}
+    </Query>
+  )
 }
 
 // const addItem = ({ render }) => {
@@ -49,9 +46,9 @@ const tagData = ({ render }) => {
 // }
 
 const ItemsContainer = adopt({
-  tagData,
   itemsData,
-  // userItemsData,
+  userItemsData,
+  tagData
   // addItem
 })
 

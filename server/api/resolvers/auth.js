@@ -39,19 +39,12 @@ module.exports = function(app) {
   return {
     async signup(parent, args, context) {
       try {
-        /**
-         * @TODO: Authentication - Server
-         *
-         * Storing passwords in your project's database requires some basic security
-         * precautions. If someone gains access to your database, and passwords
-         * are stored in 'clear-text' your users accounts immediately compromised.
-         *
-         * The solution is to create a cryptographic hash of the password provided,
+       
+         /* The solution for the password not to be known is to create a cryptographic hash of the password provided,
          * and store that instead. The password can be decoded using the original password.
          */
-        // @TODO: Use bcrypt to generate a cryptographic hash to conceal the user's password before storing it.
+        //we Used bcrypt to generate a cryptographic hash to conceal the user's password before storing it.
         const hashedPassword = await bcrypt.hash(args.user.password, 10)
-        // -------------------------------
 
         const user = await context.pgResource.createUser({
           fullname: args.user.fullname,
@@ -84,8 +77,11 @@ module.exports = function(app) {
          *  they submitted from the login form to decrypt the 'hashed' version stored in out database.
          */
         // Use bcrypt to compare the provided password to 'hashed' password stored in your database.
-        const valid = false
-        // -------------------------------
+        const valid = await bcrypt.compare(
+          args.user.password,
+          args.user.hashedPassword
+        )
+        
         if (!valid || !user) throw 'User was not found.'
 
         setCookie({
