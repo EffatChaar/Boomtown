@@ -64,6 +64,7 @@ module.exports = gql`
     viewer: User
     items(filter: ID): [Item]
     tags: [Tag]
+    uploads: [File]
   }
 
   input SignUpInput {

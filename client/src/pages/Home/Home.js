@@ -6,15 +6,11 @@ import { Redirect } from 'react-router-dom'
 import AccountForm from '../../components/AccountForm'
 import styles from './styles'
 import gql from "graphql-tag";
-import { Query } from "react-apollo";
 import {ALL_TAGS_QUERY, ALL_USER_ITEMS_QUERY, ALL_ITEMS_QUERY} from '../../apollo/queries';
 
 
-const Home = ({ classes }) => (
-    <Query query={ALL_ITEMS_QUERY} variables={{"id": 1 }} >
-    {({ loading, error, data}) => {
-      if (loading) return 'Loading...'
-      if (error) return `Error!' ${error.message}`
+
+const Home = ({ classes }) => {
       return (
         <Grid
           container
@@ -42,9 +38,7 @@ const Home = ({ classes }) => (
             <AccountForm />
           </Grid>
         </Grid>
-          )
-        }}
-      </Query>
-      );
-    
+          
+      )
+    }
 export default withStyles(styles)(Home)

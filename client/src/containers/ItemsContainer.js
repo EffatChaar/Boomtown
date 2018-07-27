@@ -3,13 +3,13 @@ import { Query } from 'react-apollo'
 import React from 'react'
 import Mutation from 'react'
 
-// import { ViewerContext } from '../context/ViewerProvider'
+import { ViewerContext } from '../context/ViewerProvider'
 
 import {
   ALL_TAGS_QUERY,
   ALL_ITEMS_QUERY,
   ALL_USER_ITEMS_QUERY,
-  // ADD_ITEM_MUTATION
+  ADD_ITEM_MUTATION
 } from '../apollo/queries'
 
 
@@ -42,21 +42,23 @@ const tagData = ({ render }) => {
   )
 }
 
-// const addItem = ({ render }) => (
-//   <Mutation 
-//     mutation={ADD_ITEM_MUTATION}
-//     >
-//     {(mutation, { data, loading, error }) => {
-//       render({ mutation, data, error, loading })
-//     }}
-//     </Mutation>
-//   )
+const addItem = ({ render }) => {
+  return (
+  <Mutation 
+    mutation={ADD_ITEM_MUTATION}
+    >
+    {(mutation, { data, loading, error }) => 
+      render({ mutation, data, loading, error })
+    }
+    </Mutation>
+  )
+}
 
 const ItemsContainer = adopt({
   itemsData,
   userItemsData,
-  tagData
-  // addItem
+  tagData,
+  addItem
 })
 
 export default ItemsContainer
