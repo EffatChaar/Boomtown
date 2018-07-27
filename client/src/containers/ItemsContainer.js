@@ -1,7 +1,7 @@
 import { adopt } from 'react-adopt'
 import { Query } from 'react-apollo'
 import React from 'react'
-import Mutation from 'react'
+import Mutation from 'react-apollo'
 
 import { ViewerContext } from '../context/ViewerProvider'
 
@@ -13,46 +13,55 @@ import {
 } from '../apollo/queries'
 
 
-const itemsData = ({ render }) => {
-  return (
-    <Query query={ALL_ITEMS_QUERY} >
-      {({ loading, error, data: { items } }) =>
-        render({ loading, error, items })
-      }
+const itemsData = ({ render }) => (
+  <ViewerContext.Consumer>
+    {({ viewer }) => (
+      <Query  query={ALL_ITEMS_QUERY}
+              variables={{ filter: viewer.id }}>
+      {({ data: { items }, loading }) =>
+        render({ items, loading })}
     </Query>
-  )
-}
+    )}
+    </ViewerContext.Consumer>
+);
+
   
-const userItemsData = ({ userId, render }) => {
-  return (
-    <Query query={ALL_USER_ITEMS_QUERY} variables={{ id: 2 }} >
-    {({ loading, error, data: { user } }) =>
-      render({ loading, error, user })
-    }
-  </Query>
-  )
-}
-
-const tagData = ({ render }) => {
-  return (
-    <Query query={ALL_TAGS_QUERY} >
-        {({ loading, error, data: { tags } }) =>
-        render({ loading, error, tags })}
+const userItemsData = ({ userId, render }) => (
+  <ViewerContext.Consumer>
+    {({ viewer }) => (
+      <Query  query={ALL_USER_ITEMS_QUERY}
+              variables={{ id: userId || viewer.id }}>
+      {({ data: { user }, loading }) =>
+        render({ user , loading })}
     </Query>
-  )
-}
+    )}
+    </ViewerContext.Consumer>
+);
 
-const addItem = ({ render }) => {
-  return (
-  <Mutation 
-    mutation={ADD_ITEM_MUTATION}
-    >
-    {(mutation, { data, loading, error }) => 
+const tagData = ({ render }) => (
+  <Query query={ALL_TAGS_QUERY} >
+      {({ data: { tags }, loading }) =>
+      render({ tags, loading })}
+  </Query>
+)
+
+const addItem = ({ render }) => (
+  <ViewerContext.Consumer>
+    {({ viewer }) => (
+      <Mutation 
+      mutation={ADD_ITEM_MUTATION}
+      refetchQueries={() => [
+        { query: ALL_USER_ITEMS_QUERY,
+          variables: { id: viewer.id } }
+      ]}
+      >
+      {(mutation, { data, loading, error }) => 
       render({ mutation, data, loading, error })
-    }
-    </Mutation>
-  )
-}
+      }
+      </Mutation>
+    )}
+  </ViewerContext.Consumer>
+)
 
 const ItemsContainer = adopt({
   itemsData,

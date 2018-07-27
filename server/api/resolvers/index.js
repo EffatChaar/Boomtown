@@ -89,13 +89,7 @@ module.exports = function(app) {
           throw new ApolloError(e)
           }
         },
-      // return {
-      //   id: 29,
-      //   fullname: "Mock user",
-      //   email: "mock@user.com",
-      //   bio: "Mock user. Remove me."
-      // }
-      // -------------------------------
+    
       async tags(parent, args, { pgResource }, info) {
       try {
         const tagsForItem = await pgResource.getTagsForItem(parent.id)

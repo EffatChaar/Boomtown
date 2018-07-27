@@ -7,9 +7,9 @@ export const ViewerContext = React.createContext()
 
 export const ViewerProvider = ({ children }) => (
    <Query query={VIEWER_QUERY}>
-    {({ data: { viewer }, loading, error }) => {
+    {({ data, loading, error }) => {
       return (
-        <ViewerContext.Provider value={{ viewer, loading, error }}>
+        <ViewerContext.Provider value={{ data, loading, error }}>
           {children}
         </ViewerContext.Provider>
       )

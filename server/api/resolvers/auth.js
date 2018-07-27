@@ -9,7 +9,7 @@ function setCookie({ tokenName, token, res }) {
    secure: process.env.NODE_ENV === 'production',
    maxAge: 1000 * 60 * 60 * 2
   })
-  // -------------------------------
+
 }
 
 function generateToken(user, secret) {
@@ -19,36 +19,28 @@ function generateToken(user, secret) {
   return token
 }
 
-//   return jwt.sign({
-//     user: user
-//   },
-//           secret,
-//           { expiresIn: '1h' })
-
 module.exports = function(app) {
   return {
     async signup(parent, args, context) {
       try {
        
-         /* The solution for the password not to be known is to create a cryptographic hash of the password provided,
-         * and store that instead. The password can be decoded using the original password.
-         */
-        //we Used bcrypt to generate a cryptographic hash to conceal the user's password before storing it.
         const hashedPassword = await bcrypt.hash(args.user.password, 10)
 
         const user = await context.pgResource.createUser({
-          fullname: args.user.fullname,
-          email: args.user.email,
-          password: hashedPassword
+          fullname,
+          email,
+          password
         })
 
         setCookie({
           tokenName: app.get('JWT_COOKIE_NAME'),
-          token: generateToken(args.user, app.get('JWT_SECRET')),
+          token: generateToken(user, app.get('JWT_SECRET')),
           res: context.req.res
         })
 
-        return true
+        return {
+          id: user.id
+        }
       } catch (e) {
         throw new AuthenticationError(e)
       }

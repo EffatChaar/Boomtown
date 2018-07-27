@@ -6,13 +6,13 @@ import Items from './../pages/Items';
 import Profile from './../pages/Profile';
 import Share from './../pages/Share';
 import { ViewerContext } from '../context/ViewerProvider';
-import FullScreenLoader from '../components/FullScreenLoader'
+// import FullScreenLoader from '../components/FullScreenLoader'
 
 
 export default () => (
   <ViewerContext.Consumer>
     {({ loading, viewer, error }) => {
-      if (!loading) return <FullScreenLoader />
+      if (loading) return 'hi'
       if (!viewer) {
         return (
           <Switch>
