@@ -1,7 +1,6 @@
 import { adopt } from 'react-adopt'
-import { Query } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
 import React from 'react'
-import Mutation from 'react-apollo'
 
 import { ViewerContext } from '../context/ViewerProvider'
 

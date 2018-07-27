@@ -25,6 +25,7 @@ module.exports = gql`
   type User @auth {
     id: ID!
     email: String!
+    password: String!
     fullname: String!
     bio: String
     items: [Item]
@@ -83,9 +84,9 @@ module.exports = gql`
       image: Upload
     ): Item
     signup(
-     user: SignUpInput!): Boolean
+     user: SignUpInput!): User!
     login(
-      user: LoginInput!): Boolean
+      user: LoginInput!): User
     logout: Boolean
   }
 `

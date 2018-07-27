@@ -68,7 +68,7 @@ module.exports = function(postgres) {
     async getItems(idToOmit) {
       let text = `SELECT * FROM items;`
       if(idToOmit){
-        text = `SELECT * FROM items WHERE items.ownerid !=$1 AND items.borrowerid is NULL;`
+        text = `SELECT * FROM items WHERE items.ownerid != $1 AND items.borrowerid is NULL;`
       }
       try {
       const items = await postgres.query({
@@ -139,24 +139,6 @@ module.exports = function(postgres) {
         }
       },
     async saveNewItem({ item, image, user }) {
-      /**
-       *  @TODO: Adding a New Item
-       *
-       *  Adding a new Item to Posgtres is the most advanced query.
-       *  It requires 3 separate INSERT statements.
-       *
-       *  All of the INSERT statements must:
-       *  1- Proceed in a specific order.
-       *  2- Succeed for the new Item to be considered added
-       *  3- If any of the INSERT queries fail, any successful INSERT
-       *     queries should be 'rolled back' to avoid 'orphan' data in the database.
-       *
-       *  To achieve #3 we'll ue something called a Postgres Transaction!
-       *  The code for the transaction has been provided for you, along with
-       *  helpful comments to help you get started.
-       *
-       *  Read the method and the comments carefully before you begin.
-       */
 
       return new Promise((resolve, reject) => {
         /**
@@ -178,19 +160,14 @@ module.exports = function(postgres) {
               imageStream.on('end', async () => {
                 // Image has been converted, begin saving things
                 const { title, description, tags } = item
+                
+                // Generate new Item query
                 const newItemQuery = {
-                  test: "",
+                  text: `INSERT INTO items (title, description, ownerid) VALUES ($1, $2, $3) RETURNING *`,
                   values: []
                 }
-
-                // Generate new Item query
-                // @TODO
-                const newItem = client.query(newItemQuery)
-                // -------------------------------
-
                 // Insert new Item
-                // @TODO
-                // -------------------------------
+                client.query(newItemQuery)
 
                 const imageUploadQuery = {
                   text:
@@ -202,43 +179,19 @@ module.exports = function(postgres) {
                     'base64',
                     base64Str
                   ]
-                
                 }
-
+                // Upload image
                 await client.query(imageUploadQuery)
 
-
+                // Generate tag relationships query (use the'tagsQueryString' helper function provided)
                 const tagsQuery = {
-                  text: 'INSERT INTO itemtags (itemid, tagid) VALUES ${tagsQueryString(/* ??? */)}',
-                  vaslues: []
+                  text: `INSERT INTO itemtags (itemid, tagid) VALUES ${
+                    tagsQueryString(/* ?? */)
+                  }`
                 }
 
-
-
-                await client.query(tagsQuery)
-
-
-
-              
-                // Upload image
-                const uploadedImage = await client.query(imageUploadQuery)
-                const imageid = uploadedImage.rows[0].id
-
-                // Generate image relation query
-                // @TODO
-                // -------------------------------
-
-                // Insert image
-                // @TODO
-                // -------------------------------
-
-                // Generate tag relationships query (use the'tagsQueryString' helper function provided)
-                // @TODO
-                // -------------------------------
-
                 // Insert tags
-                // @TODO
-                // -------------------------------
+                await client.query(tagsQuery)
 
                 // Commit the entire transaction!
                 client.query('COMMIT', err => {
@@ -254,12 +207,10 @@ module.exports = function(postgres) {
               })
             })
           } catch (e) {
-            // Something went wrong
             client.query('ROLLBACK', err => {
               if (err) {
                 throw err
               }
-              // release the client back to the pool
               done()
             })
             switch (true) {

@@ -61,7 +61,7 @@ module.exports = function(app) {
 
         setCookie({
           tokenName: app.get('JWT_COOKIE_NAME'),
-          token: generateToken(args.user, app.get('JWT_SECRET')),
+          token: generateToken(user, app.get('JWT_SECRET')),
           res: context.req.res
         })
 
