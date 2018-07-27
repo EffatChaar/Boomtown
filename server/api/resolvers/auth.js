@@ -26,14 +26,17 @@ function setCookie({ tokenName, token, res }) {
 }
 
 function generateToken(user, secret) {
-  const { id, email, fullname, bio } = user // Omit the password from the token
+  const { id, email, fullname, bio } = user
+  const token = jwt.sign( {id, email, fullname, bio}, secret, {expiresIn: '2h'} )
 
-  return jwt.sign({
-    user: user
-  },
-          secret,
-          { expiresIn: '1h' })
+  return token
 }
+
+//   return jwt.sign({
+//     user: user
+//   },
+//           secret,
+//           { expiresIn: '1h' })
 
 module.exports = function(app) {
   return {
@@ -69,18 +72,11 @@ module.exports = function(app) {
         const user = await context.pgResource.getUserAndPasswordForVerification(
           args.user.email
         )
-
-        /**
-         *  @TODO: Authentication - Server
-         *
-         *  To verify the user has provided the correct password, we'll use the provided password
-         *  they submitted from the login form to decrypt the 'hashed' version stored in out database.
-         */
-        // Use bcrypt to compare the provided password to 'hashed' password stored in your database.
         const valid = await bcrypt.compare(
           args.user.password,
-          args.user.hashedPassword
+          user.password
         )
+        
         
         if (!valid || !user) throw 'User was not found.'
 

@@ -104,7 +104,7 @@ async saveItem(values, tags, addItem) {
     const { classes, updateNewItem, resetNewItem } = this.props
     return (
       <ItemsContainer>
-        {({ tagData: { loading, error, tags  } }) => {
+        {({ tagData: { loading, error, tags  }, addItem }) => {
           if (loading) {
             return 'Loading...'
           }
@@ -116,7 +116,7 @@ async saveItem(values, tags, addItem) {
             onSubmit={values => {
               this.saveItem(values, tags, addItem)
             }}
-            validate={validate.bind(this)}
+            validate={this.validate}
             render={({
               handleSubmit,
               pristine,

@@ -40,7 +40,7 @@ module.exports = function(postgres) {
     },
     async getUserAndPasswordForVerification(email) {
       const findUserQuery = {
-        text: '', // @TODO: Authentication - Server
+        text: 'SELECT * FROM users WHERE email =  $1;',
         values: [email]
       }
       try {
@@ -170,7 +170,7 @@ module.exports = function(postgres) {
               // Convert image (file stream) to Base64
               const imageStream = image.stream.pipe(strs('base64'))
 
-              let base64Str = ''
+              let base64Str = 'data:image/*;base64'
               imageStream.on('data', data => {
                 base64Str += data
               })
@@ -178,9 +178,14 @@ module.exports = function(postgres) {
               imageStream.on('end', async () => {
                 // Image has been converted, begin saving things
                 const { title, description, tags } = item
+                const newItemQuery = {
+                  test: "",
+                  values: []
+                }
 
                 // Generate new Item query
                 // @TODO
+                const newItem = client.query(newItemQuery)
                 // -------------------------------
 
                 // Insert new Item
@@ -197,8 +202,24 @@ module.exports = function(postgres) {
                     'base64',
                     base64Str
                   ]
+                
                 }
 
+                await client.query(imageUploadQuery)
+
+
+                const tagsQuery = {
+                  text: 'INSERT INTO itemtags (itemid, tagid) VALUES ${tagsQueryString(/* ??? */)}',
+                  vaslues: []
+                }
+
+
+
+                await client.query(tagsQuery)
+
+
+
+              
                 // Upload image
                 const uploadedImage = await client.query(imageUploadQuery)
                 const imageid = uploadedImage.rows[0].id

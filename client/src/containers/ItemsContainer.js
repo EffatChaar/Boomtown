@@ -9,7 +9,7 @@ import {
   ALL_TAGS_QUERY,
   ALL_ITEMS_QUERY,
   ALL_USER_ITEMS_QUERY,
-  ADD_ITEM_MUTATION
+  // ADD_ITEM_MUTATION
 } from '../apollo/queries'
 
 
@@ -42,21 +42,21 @@ const tagData = ({ render }) => {
   )
 }
 
-const addItem = ({ render }) => (
-  <Mutation 
-    mutation={ADD_ITEM_MUTATION}
-    >
-    {(mutation, { data, loading, error }) => {
-      render({ mutation, data, error, loading })
-    }}
-    </Mutation>
-  )
+// const addItem = ({ render }) => (
+//   <Mutation 
+//     mutation={ADD_ITEM_MUTATION}
+//     >
+//     {(mutation, { data, loading, error }) => {
+//       render({ mutation, data, error, loading })
+//     }}
+//     </Mutation>
+//   )
 
 const ItemsContainer = adopt({
   itemsData,
   userItemsData,
-  tagData,
-  addItem
+  tagData
+  // addItem
 })
 
 export default ItemsContainer
