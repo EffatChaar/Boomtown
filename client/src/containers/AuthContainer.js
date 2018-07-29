@@ -9,7 +9,7 @@ import {
   LOGIN_MUTATION,
   LOGOUT_MUTATION,
   SIGNUP_MUTATION
-} from '../ApolloClient/queries'
+} from '../apollo/queries.js'
 
 const signup = ({ render }) => (
   <Mutation mutation={SIGNUP_MUTATION}

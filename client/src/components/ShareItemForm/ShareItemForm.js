@@ -1,13 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { FormSpy, Form, Field } from 'react-final-form'
-import { Button, TextField, Checkbox, InputLabel } from '@material-ui/core'
+import { Checkbox, Button, InputLabel, TextField } from '@material-ui/core'
 import ItemsContainer from '../../containers/ItemsContainer'
 import { connect } from 'react-redux'
-import {
-  resetImage,
-  updateNewItem,
-  resetNewItem
-} from '../../redux/modules/ShareItemPreview'
+import { resetImage, updateNewItem, resetNewItem } from '../../redux/modules/ShareItemPreview'
 import Typography from '@material-ui/core/Typography'
 import { classes } from '@material-ui/core/styles';
 import styles from './styles'
@@ -17,10 +13,11 @@ class ShareItemForm extends Component {
     super(props)
     this.state = {
       fileSelected: false,
-      // selectedTags: [],
-      // submitted: false
-      imageurl: ''
+      selectedTags: [],
+      submitted: false
     }
+    this.fileInput = React.createRef()
+
   }
   onSubmit = values => {
     console.log(values)
@@ -30,6 +27,12 @@ class ShareItemForm extends Component {
   }
   handleImageSelect = e => {
     this.setState({ fileSelected :e.target.files[0]})
+  }
+  handleSubmit(values) {
+    console.log('Controlled in: ' + values)
+  }
+  handleChange = event => {
+    this.setState({ selectedTags: event.target.value })
   }
   getBase64Url() {
     return new Promise(resolve => {
@@ -76,7 +79,11 @@ dispatchUpdate(values, updateNewItem) {
 }
 
 
-handleCheckbox(event) {}
+handleCheckbox= event => {
+  this.setState({
+    selectedTags: event.target.value
+  })
+}
 
 async saveItem(values, tags, addItem) {
   const {
@@ -87,7 +94,7 @@ async saveItem(values, tags, addItem) {
     try {
       const itemData = {
         ...values,
-        tags: this.applyTags(tags)
+        tags: this.getTags(values.tags)
       }
       await addItem.mutation({
         variables: {
@@ -101,7 +108,7 @@ async saveItem(values, tags, addItem) {
     }
   }
   render() {
-    const { classes, updateNewItem, resetNewItem } = this.props
+    const { resetImage, updateNewItem, resetNewItem } = this.props
     return (
       <ItemsContainer>
         {({ tagData: { loading, error, tags  }, addItem }) => {
@@ -122,7 +129,8 @@ async saveItem(values, tags, addItem) {
               pristine,
               submitting,
               invalid,
-              form
+              form,
+              values
             }) => (
               <form onSubmit={handleSubmit} className={classes.ShareItemForm}>
                 <FormSpy
@@ -134,27 +142,25 @@ async saveItem(values, tags, addItem) {
                     return ''
                   }}
                 />
-
-                <Typography variant="display4" className={classes.headline} >
-                  Share. Borrow. Prosper.
-                </Typography>
-                <Field name="imageurl" >
-                  {(input, meta) => (
+                 <Field name="imageurl" >
+                 render={({ input, meta }) => (
                     <Fragment>
                       <Button
+                      variant='contained'
+                      color='default'
                         onClick={() => {
                           this.fileRef.current.click()
-                          // Todo
                         }}
                       >
                         Upload an image!
                       </Button>
                       <input
-                        onChange={e => this.handleImageSelect(e)}
                         type="file"
                         accept="image/*"
                         hidden
-                        ref={this.fileRef}
+                        ref={this.fileInput}
+                        onChange={e => this.handleImageSelect(e)
+                        }
                       />
                     </Fragment>
                   )}

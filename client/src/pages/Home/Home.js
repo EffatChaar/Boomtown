@@ -6,7 +6,6 @@ import { Redirect } from 'react-router-dom'
 import AccountForm from '../../components/AccountForm'
 import styles from './styles'
 import gql from "graphql-tag";
-import {ALL_TAGS_QUERY, ALL_USER_ITEMS_QUERY, ALL_ITEMS_QUERY} from '../../apollo/queries';
 
 
 

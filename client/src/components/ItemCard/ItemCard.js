@@ -28,7 +28,7 @@ class ItemCard extends Component {
           <Typography gutterBottom variant="headline" component="h2">
             {item.title}
           </Typography>
-          <Typography component="p">
+          <Typography component="p" variant="caption" >
             {itemTags.join(', ')}
           </Typography>
           <Typography component="p">{item.description}</Typography>
