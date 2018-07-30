@@ -1,9 +1,5 @@
 import gql from 'graphql-tag'
 
-/**
- * Item and user-related queries and mutations.
- */
-
 const ItemFields = gql`
   fragment ItemFields on Item {
     id
@@ -75,11 +71,10 @@ export const ALL_TAGS_QUERY = gql`
 
 export const ADD_ITEM_MUTATION = gql`
   mutation addItem($item: NewItemInput!, $image: Upload!) {
-    items {
-      ...ItemFields
+    addItem(item: $item, image: $image) {
+      id
     }
   }
-  ${ItemFields}
 `
 
 export const VIEWER_QUERY = gql`

@@ -27,9 +27,9 @@ module.exports = function(app) {
         const hashedPassword = await bcrypt.hash(args.user.password, 10)
 
         const user = await context.pgResource.createUser({
-          fullname,
-          email,
-          password
+          fullname: args.user.fullname,
+          email: args.user.email,
+          password: hashedPassword
         })
 
         setCookie({

@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import styles from './styles'
 import { Form, Field } from 'react-final-form'
 import AuthContainer from '../../containers/AuthContainer'
-import validate from './helpers/validation'
+// import validate from './helpers/validation'
 
 class AccountForm extends Component {
   constructor(props) {
@@ -18,26 +18,26 @@ class AccountForm extends Component {
       formToggle: true
     }
   }
-  handleSubmit = values => {
-    return {
-      ...values
-    }
-  }
-  validate = values => {
-    let errors = {}
-    if (!values.email) {
-      errors.email = "Email Required Here!"
-    }
-    if (!this.state.formToggle) {
-      if(!values.fullname) {
-        errors.fullname = "Please Enter Your Name"
-      }
-    }
-    if (!values.password) {
-      errors.password = "Please Enter Your Password"
-    }
-    return errors
-  }
+  // handleSubmit = values => {
+  //   return {
+  //     ...values
+  //   }
+  // }
+  // validate = values => {
+  //   let errors = {}
+  //   if (!values.email) {
+  //     errors.email = "Email Required Here!"
+  //   }
+  //   if (!this.state.formToggle) {
+  //     if(!values.fullname) {
+  //       errors.fullname = "Please Enter Your Name"
+  //     }
+  //   }
+  //   if (!values.password) {
+  //     errors.password = "Please Enter Your Password"
+  //   }
+  //   return errors
+  // }
 
   render() {
     const { classes } = this.props
@@ -62,7 +62,7 @@ class AccountForm extends Component {
                 })
               }
             }
-            validate = {this.validate}
+            validate = {console.log('valid input')}
             render = {({ handleSubmit, submitting, pristine, form, invalid, values }) => (
               <form onSubmit = {handleSubmit} className = {classes.accountForm}>
               {!this.state.formToggle && (
@@ -125,7 +125,7 @@ class AccountForm extends Component {
               variant="contained"
               size="large"
               color="default"
-              disabled={pristine || invalid || submitting}
+              disabled={ false }
             >
               {this.state.formToggle ? 'Enter' : 'Create Account'}
             </Button>

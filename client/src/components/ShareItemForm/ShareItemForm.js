@@ -19,17 +19,11 @@ class ShareItemForm extends Component {
     this.fileInput = React.createRef()
 
   }
-  onSubmit = values => {
-    console.log(values)
-  }
   validate = values => {
     console.log(values)
   }
   handleImageSelect = e => {
     this.setState({ fileSelected :e.target.files[0]})
-  }
-  handleSubmit(values) {
-    console.log('Controlled in: ' + values)
   }
   handleChange = event => {
     this.setState({ selectedTags: event.target.value })
@@ -76,25 +70,25 @@ dispatchUpdate(values, updateNewItem) {
       ...values,
       tags
     })
-}
+  }
 
 
-handleCheckbox= event => {
+  handleCheckbox= event => {
   this.setState({
     selectedTags: event.target.value
   })
-}
+  }
 
 async saveItem(values, tags, addItem) {
   const {
     validity,
     files: [file]
   } = this.fileInput.current
-  if (!validity.valid || !file) return;
+  if (!validity.valid || !file) return
     try {
       const itemData = {
         ...values,
-        tags: this.getTags(values.tags)
+        tags
       }
       await addItem.mutation({
         variables: {
@@ -167,7 +161,9 @@ async saveItem(values, tags, addItem) {
                   </Field>
                   <Field name="title">
                   {({ input, meta }) => (
-                    <TextField placeholder="Name your Item" {...input} />
+                    <TextField 
+                    placeholder="Name your Item"
+                    {...input} />
                   )}
                 </Field>
                 <Field name="description">
@@ -196,7 +192,7 @@ async saveItem(values, tags, addItem) {
                 ))}              
                 <Field
                   render={({ input, meta }) => (
-                    <Button type="submit" variant="contained" color="secondary">
+                    <Button type="submit" variant="contained" color="default">
                       Share
                     </Button>
                   )}
