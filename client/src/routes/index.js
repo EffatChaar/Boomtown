@@ -1,12 +1,11 @@
-import React from 'react'
+import React,{Fragment}  from 'react'
 import { Redirect, Route, Switch } from 'react-router'
 import Home from './../pages/Home';
 import Items from './../pages/Items';
 import Profile from './../pages/Profile';
 import Share from './../pages/Share';
 import { ViewerContext } from '../context/ViewerProvider';
-
-
+import Header from '../components/Header/Header'
 
 export default () => (
   <ViewerContext.Consumer>
@@ -23,6 +22,8 @@ export default () => (
           )
         }
         return (  
+          <Fragment>
+            <Header/>
           <Switch>
             <Route  exact path="/items" component={ Items }
                 />
@@ -34,6 +35,7 @@ export default () => (
                 />           
             <Redirect to="/items" />
           </Switch>
+          </Fragment>
         )}}
   </ViewerContext.Consumer>
 )

@@ -141,68 +141,62 @@ module.exports = function(postgres) {
     async saveNewItem({ item, image, user }) {
 
       return new Promise((resolve, reject) => {
-        /**
-         * Begin transaction by opening a long-lived connection
-         * to a client from the client pool.
-         */
         postgres.connect((err, client, done) => {
           try {
-            // Begin postgres transaction
             client.query('BEGIN', err => {
-              // Convert image (file stream) to Base64
               const imageStream = image.stream.pipe(strs('base64'))
-
               let base64Str = 'data:image/*;base64'
               imageStream.on('data', data => {
                 base64Str += data
               })
 
               imageStream.on('end', async () => {
-                // Image has been converted, begin saving things
-                const { title, description, tags } = item
-                
-                // Generate new Item query
+                const { title, description, tags } = item           
                 const newItemQuery = {
                   text: `INSERT INTO items (title, description, ownerid) VALUES ($1, $2, $3) RETURNING *`,
-                  values: []
+                  values: [title, description, user.id]
                 }
-                // Insert new Item
-                client.query(newItemQuery)
+                const newItem = await client.query(newItemQuery)
+                const itemid = newItem.rows[0].id
 
                 const imageUploadQuery = {
                   text:
                     'INSERT INTO uploads (itemid, filename, mimetype, encoding, data) VALUES ($1, $2, $3, $4, $5) RETURNING *',
                   values: [
-                    // itemid,
+                    itemid,
                     image.filename,
                     image.mimetype,
                     'base64',
                     base64Str
                   ]
                 }
-                // Upload image
-                await client.query(imageUploadQuery)
-
-                // Generate tag relationships query (use the'tagsQueryString' helper function provided)
-                const tagsQuery = {
-                  text: `INSERT INTO itemtags (itemid, tagid) VALUES ${
-                    tagsQueryString(/* ?? */)
-                  }`
+                try {
+                  await client.query(imageUploadQuery)
+                } catch (e) {
+                  console.log(e)
                 }
 
-                // Insert tags
-                await client.query(tagsQuery)
+                const tagsQuery = {
+                  text: `INSERT INTO itemtags (itemid, tagid) VALUES ${tagsQueryString(
+                    [...tags],
+                    itemid,
+                    ''
+                  )}`,
+                  values: tags.map(tag => tag.id)
+                }
 
-                // Commit the entire transaction!
+                try {
+                  await client.query(tagsQuery)
+                }catch (e) {
+                  console.log(e)
+                }
+
                 client.query('COMMIT', err => {
                   if (err) {
                     throw err
                   }
-                  // release the client back to the pool
                   done()
-                  // Uncomment this resolve statement when you're ready!
-                  // resolve(newItem.rows[0])
-                  // -------------------------------
+                  resolve(newItem.rows[0])
                 })
               })
             })

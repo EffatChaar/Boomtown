@@ -4,7 +4,7 @@ const ItemFields = gql`
   fragment ItemFields on Item {
     id
     title
-    imageUrl
+    imageurl
     description
     created
     tags {
@@ -65,6 +65,7 @@ export const ALL_TAGS_QUERY = gql`
   query {
     tags {
       title
+      id
     }
   }
 `
