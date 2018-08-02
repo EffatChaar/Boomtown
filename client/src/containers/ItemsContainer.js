@@ -1,9 +1,7 @@
 import { adopt } from 'react-adopt'
 import { Query, Mutation } from 'react-apollo'
 import React from 'react'
-
 import { ViewerContext } from '../context/ViewerProvider'
-
 import {
   ALL_TAGS_QUERY,
   ALL_ITEMS_QUERY,
@@ -14,11 +12,12 @@ import {
 
 const itemsData = ({ render }) => (
   <ViewerContext.Consumer>
-    {({ viewer }) => (
+    {({ loading, viewer, error }) => {
+        return (
       <Query query={ALL_ITEMS_QUERY} variables={{ filter: viewer.id }}>
-      {({ loading, error, data:{items} }) => render({ loading, error,items })}
+      {({ loading, error, data: { items } = {} }) => render({ loading, error,items })}
     </Query>
-    )}
+    )}}
     </ViewerContext.Consumer>
 )
 
@@ -30,7 +29,7 @@ const userItemsData = ({ userId, render }) => (
        query={ALL_USER_ITEMS_QUERY}
        variables={{ id: userId || viewer.id }}
      >
-       {({ loading, error, data }) => render({ loading, error, data })}
+       {({ loading, error, data:{users} }) => render({ loading, error, users })}
      </Query>
     )}
     </ViewerContext.Consumer>
@@ -38,7 +37,7 @@ const userItemsData = ({ userId, render }) => (
 
 const tagData = ({ render }) => (
   <Query query={ALL_TAGS_QUERY}>
-    {({ loading, error, data:{tags} }) => render({ loading, error, tags })}
+    {({ loading, error, data:{ tags }={} }) => render({ loading, error, tags })}
   </Query>
 )
 

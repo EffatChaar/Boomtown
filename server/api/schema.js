@@ -68,7 +68,7 @@ module.exports = gql`
     uploads: [File]
   }
 
-  input SignUpInput {
+  input SignupInput {
     fullname: String!
     email: String!
     password: String!
@@ -84,7 +84,7 @@ module.exports = gql`
       image: Upload
     ): Item
     signup(
-     user: SignUpInput!): User!
+     user: SignupInput!): User!
     login(
       user: LoginInput!): User
     logout: Boolean

@@ -40,7 +40,7 @@ module.exports = function(postgres) {
     },
     async getUserAndPasswordForVerification(email) {
       const findUserQuery = {
-        text: 'SELECT * FROM users WHERE email =  $1;',
+        text: 'SELECT * FROM users WHERE users.email =  $1;',
         values: [email]
       }
       try {
@@ -52,7 +52,6 @@ module.exports = function(postgres) {
       }
     },
     async getUserById(id) {
-
       const findUserQuery = {
         text: `SELECT * FROM users WHERE users.id = $1;`,
         values: [id]
@@ -77,6 +76,7 @@ module.exports = function(postgres) {
       })
       return items.rows
       } catch (e) {
+        console.log(e);
       throw 'No items found.'
       }
     },
@@ -97,7 +97,7 @@ module.exports = function(postgres) {
     async getBorrowedItemsForUser(id) {
       try {
         const items = await postgres.query({
-        text: `SELECT * FROM items WHERE borrowerid = $1;`,
+        text: `SELECT * FROM items WHERE items.borrowerid = $1;`,
         values: [id]
       })
       if (!items) throw 'Item not found.'
@@ -111,7 +111,7 @@ module.exports = function(postgres) {
       try {
         const tags = await postgres.query(`SELECT * FROM tags`)
         if (!tags) throw 'No tags found.'
-        return tags.rows
+        return alltags.rows
         } catch (e) {
         throw 'No tags found.'
         }
@@ -177,7 +177,8 @@ module.exports = function(postgres) {
                 }
 
                 const tagsQuery = {
-                  text: `INSERT INTO itemtags (itemid, tagid) VALUES ${tagsQueryString(
+                  text: `INSERT INTO itemtags (itemid, tagid) VALUES
+                  ${tagsQueryString(
                     [...tags],
                     itemid,
                     ''
