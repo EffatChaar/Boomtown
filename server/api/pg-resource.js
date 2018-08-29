@@ -1,11 +1,7 @@
 var strs = require('stringstream')
 
 function tagsQueryString(tags, itemid, result) {
-  /**
-   * Challenge:
-   * This function is recursive, and a little complicated.
-   * Can you refactor it to be simpler / more readable?
-   */
+
   const length = tags.length
   return length === 0
     ? `${result};`
@@ -21,7 +17,7 @@ module.exports = function(postgres) {
   return {
     async createUser({ fullname, email, password }) {
       const newUserInsert = {
-        text: 'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING *;',
+        text: 'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3) RETURNING *',
         values: [fullname, email, password]
       }
       try {
@@ -40,7 +36,7 @@ module.exports = function(postgres) {
     },
     async getUserAndPasswordForVerification(email) {
       const findUserQuery = {
-        text: 'SELECT * FROM users WHERE users.email =  $1;',
+        text: 'SELECT * FROM users WHERE email = $1',
         values: [email]
       }
       try {
@@ -53,14 +49,15 @@ module.exports = function(postgres) {
     },
     async getUserById(id) {
       const findUserQuery = {
-        text: `SELECT * FROM users WHERE users.id = $1;`,
+        text: `SELECT * FROM users WHERE users.id = $1`,
         values: [id]
       }
       try {
         const user = await postgres.query(findUserQuery)
+        if (!user) throw 'User was not found'
         return user.rows[0]
       } catch (e) {
-        throw 'No user found.'
+        throw 'User was not found'
       }
     },
 
@@ -76,8 +73,7 @@ module.exports = function(postgres) {
       })
       return items.rows
       } catch (e) {
-        console.log(e);
-      throw 'No items found.'
+      throw 'No items found'
       }
     },
 
@@ -100,10 +96,10 @@ module.exports = function(postgres) {
         text: `SELECT * FROM items WHERE items.borrowerid = $1;`,
         values: [id]
       })
-      if (!items) throw 'Item not found.'
+      if (!items) throw 'Items not found.'
       return items.rows
       } catch (e) {
-      throw 'Item not found.'
+      throw 'Items not found.'
       }
     },
 
@@ -145,7 +141,7 @@ module.exports = function(postgres) {
           try {
             client.query('BEGIN', err => {
               const imageStream = image.stream.pipe(strs('base64'))
-              let base64Str = 'data:image/*;base64'
+              let base64Str = 'data:image/*;base64,'
               imageStream.on('data', data => {
                 base64Str += data
               })
@@ -173,7 +169,7 @@ module.exports = function(postgres) {
                 try {
                   await client.query(imageUploadQuery)
                 } catch (e) {
-                  console.log(e)
+                  throw 'No image uploaded'
                 }
 
                 const tagsQuery = {
@@ -189,7 +185,7 @@ module.exports = function(postgres) {
                 try {
                   await client.query(tagsQuery)
                 }catch (e) {
-                  console.log(e)
+                  throw 'No tags found'
                 }
 
                 client.query('COMMIT', err => {

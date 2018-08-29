@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react'
 import { FormSpy, Form, Field } from 'react-final-form'
-import { Checkbox, Button, InputLabel, TextField,Select,Input,MenuItem,ListItemText} from '@material-ui/core'
+import { Checkbox, Button, TextField,Select,Input,MenuItem,ListItemText} from '@material-ui/core'
 import ItemsContainer from '../../containers/ItemsContainer'
 import { connect } from 'react-redux'
 import { resetImage, updateNewItem, resetNewItem } from '../../redux/modules/ShareItemPreview'
-import Typography from '@material-ui/core/Typography'
-import { classes } from '@material-ui/core/styles';
-import styles from './styles'
+// import Typography from '@material-ui/core/Typography'
+// import { classes } from '@material-ui/core/styles';
+// import styles from './styles'
 
 class ShareItemForm extends Component {
   constructor(props) {

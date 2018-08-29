@@ -7,14 +7,13 @@ function setCookie({ tokenName, token, res }) {
   res.cookie(tokenName, token, {
    httpOnly: true,
    secure: process.env.NODE_ENV === 'production',
-   maxAge: 1000 * 60 * 60 * 2
+   maxAge: 1000 * 60 * 60 * 2 //2hr
   })
-
 }
 
 function generateToken(user, secret) {
   const { id, email, fullname, bio } = user
-  const token = jwt.sign( {id, email, fullname, bio}, secret, {expiresIn: '2h'} )
+  const token = jwt.sign({id, email, fullname, bio}, secret, {expiresIn: '2h'})
 
   return token
 }
@@ -55,9 +54,7 @@ module.exports = function(app) {
           args.user.password,
           user.password
         )
-        
-        
-        if (!valid || !user) throw 'User was not found.'
+        if (!valid || !args.user) throw 'User was not found.'
 
         setCookie({
           tokenName: app.get('JWT_COOKIE_NAME'),

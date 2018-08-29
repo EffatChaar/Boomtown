@@ -1,7 +1,6 @@
 const { ApolloError } = require('apollo-server')
-const jwt = require("jsonwebtoken")
-const authMutations = require("./auth")
-
+const jwt = require('jsonwebtoken')
+const authMutations = require('./auth')
 const { UploadScalar, DateScalar } = require('../custom-types')
 
 module.exports = function(app) {
@@ -24,7 +23,7 @@ module.exports = function(app) {
           throw new ApolloError(e)
         }
       },
-      async items(parent,{filter}, { pgResource }, info) {
+      async items(parent,{ filter }, { pgResource }, info) {
         try {
           const items = await pgResource.getItems(filter)
           return items
@@ -48,7 +47,7 @@ module.exports = function(app) {
         try {
           const itemsForUser = await pgResource.getItemsForUser(id)
           return itemsForUser
-          }   catch (e) {
+          } catch (e) {
           throw new ApolloError(e)
           }
       },
@@ -64,7 +63,7 @@ module.exports = function(app) {
 
     Item: {
 
-      async itemowner(parent, args, { pgResource }, info) {
+      async itemowner(parent, id, { pgResource }, info) {
         try {
           const itemOwner = await pgResource.getUserById(parent.ownerid)
           return itemOwner
@@ -89,26 +88,20 @@ module.exports = function(app) {
         } catch (e) {
           throw new ApolloError(e)
         }
-      },
-      // async imageurl({ imageurl, imageid, mimetype, data }) {
-      //   if (imageurl) return imageurl
-      //   if (imageid) {
-      //     return `data:${mimetype};base64, ${data}`
-      //   }
-      // }
+      }
     },
 
     Mutation: {
       ...authMutations(app),
       async addItem(parent, args, context, info) {
         
-      image = await image;
-        const user = await jwt.decode(context.token, app.get('JWT_SECRET'));
+        const image = await args.image
+        const user = await jwt.decode(context.token, app.get('JWT_SECRET'))
         const newItem = await context.pgResource.saveNewItem({
           item: args.item,
-          image: args.image,
+          image: image,
           user
-        });
+        })
         return newItem;
       }
     }
