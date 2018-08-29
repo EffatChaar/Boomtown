@@ -1,3 +1,3 @@
-import AppBar from './AppBar'
+import Header from './Header'
 
-export default AppBar
+export default Header
