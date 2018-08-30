@@ -26,13 +26,13 @@ class AccountForm extends Component {
   validate = values => {
     const errors = {}
     if (!values.email) {
-      errors.email = 'Email Required Here!'
+      errors.email = 'Required'
     }
     if (!values.password) {
-      errors.password = 'Please Enter Your Password'
+      errors.password = 'Required'
     }
     if (!this.state.formToggle && !values.fullname) {
-        errors.fullname = 'Please Enter Your Name'
+        errors.fullname = 'Required'
     }
     
     return errors
