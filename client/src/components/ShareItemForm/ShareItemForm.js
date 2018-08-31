@@ -60,14 +60,14 @@ getTags = tags => {
   return []
 }
 
-async saveItem(values, form, addItem) {
+async saveItem(values, tags, addItem, form) {
   const {
     validity,
     files: [file]
   } = this.fileInput.current
 
   if (!validity.valid) return
-  const tags = this.getTags(values.tags)
+  // const tags = this.getTags(values.tags)
     try {
       const itemData = {
         ...values,

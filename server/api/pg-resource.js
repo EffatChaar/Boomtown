@@ -65,13 +65,11 @@ module.exports = function(postgres) {
        try { 
         
       const items = await postgres.query({
-        text: `Select item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid
-                From items item
-
-                  INNER JOIN uploads upload
-        ON upload.itemid = item.id
-              
-            WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
+        text: `SELECT item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
+                FROM items item
+                INNER JOIN uploads upload
+                ON upload.itemid = item.id             
+              WHERE (item.ownerid != $1 AND item.borrowerid IS NULL) OR ($1 IS NULL)`,
         values: [idToOmit]
       })
       if (!items) throw 'No Items 1'
@@ -84,11 +82,11 @@ module.exports = function(postgres) {
     async getItemsForUser(id) {
       try {
         const items = await postgres.query({
-          text: `Select item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
-                  From items item
-                INNER JOIN uploads upload
-                ON upload.itemid = item.id
-              WHERE ownerid = $1`,
+          text: `SELECT item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
+                  FROM items item
+                  INNER JOIN uploads upload
+                  ON upload.itemid = item.id
+                WHERE item.ownerid = $1`,
           values: [id]
         })
         if (!items) throw 'Items not found.2'
@@ -101,11 +99,11 @@ module.exports = function(postgres) {
     async getBorrowedItemsForUser(id) {
       try {
         const items = await postgres.query({
-        text: `Select item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
-                From items item
-              INNER JOIN uploads upload
-              ON upload.itemid = item.id
-            WHERE borrowerid = $1`,
+        text: `SELECT item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
+                FROM items item
+                INNER JOIN uploads upload
+                ON upload.itemid = item.id
+              WHERE item.borrowerid = $1`,
         values: [id]
       })
       if (!items) throw 'Items not found.3'
