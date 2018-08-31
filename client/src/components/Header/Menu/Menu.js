@@ -8,11 +8,6 @@ import AuthContainer from '../../../containers/AuthContainer'
 import { ViewerContext } from '../../../context/ViewerProvider'
 
 
-const options = [
-  'Your Profile',
-  'Sign Out'
-]
-
 const ITEM_HEIGHT = 48
 
 class LongMenu extends React.Component {

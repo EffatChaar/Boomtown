@@ -62,44 +62,56 @@ module.exports = function(postgres) {
     },
 
     async getItems(idToOmit) {
-      let text = `SELECT * FROM items;`
-      if(idToOmit){
-        text = `SELECT * FROM items WHERE items.ownerid != $1 AND items.borrowerid is NULL;`
-      }
-      try {
+       try { 
+        
       const items = await postgres.query({
-        text: text,
-        values: idToOmit ? [idToOmit] : []
+        text: `Select item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid
+                From items item
+
+                  INNER JOIN uploads upload
+        ON upload.itemid = item.id
+              
+            WHERE (ownerid != $1 AND borrowerid IS NULL) OR ($1 IS NULL)`,
+        values: [idToOmit]
       })
+      if (!items) throw 'No Items 1'
       return items.rows
       } catch (e) {
-      throw 'No items found'
+      throw 'No items 1'
       }
     },
 
     async getItemsForUser(id) {
       try {
         const items = await postgres.query({
-          text: `SELECT * FROM items WHERE ownerid = $1;`,
+          text: `Select item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
+                  From items item
+                INNER JOIN uploads upload
+                ON upload.itemid = item.id
+              WHERE ownerid = $1`,
           values: [id]
         })
-        if (!items) throw 'Items not found.'
+        if (!items) throw 'Items not found.2'
         return items.rows
       } catch (e) {
-        throw 'Items not found.'
+        throw 'Items not found.2'
       }
     },
 
     async getBorrowedItemsForUser(id) {
       try {
         const items = await postgres.query({
-        text: `SELECT * FROM items WHERE items.borrowerid = $1;`,
+        text: `Select item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
+                From items item
+              INNER JOIN uploads upload
+              ON upload.itemid = item.id
+            WHERE borrowerid = $1`,
         values: [id]
       })
-      if (!items) throw 'Items not found.'
+      if (!items) throw 'Items not found.3'
       return items.rows
       } catch (e) {
-      throw 'Items not found.'
+      throw 'Items not found.3'
       }
     },
 
@@ -107,7 +119,7 @@ module.exports = function(postgres) {
       try {
         const tags = await postgres.query(`SELECT * FROM tags`)
         if (!tags) throw 'No tags found.'
-        return alltags.rows
+        return tags.rows
         } catch (e) {
         throw 'No tags found.'
         }
@@ -115,15 +127,12 @@ module.exports = function(postgres) {
 
     async getTagsForItem(id) {
       const tagsQuery = {
-        text: `SELECT tags.title, tags.id
-        FROM
-            tags
-            JOIN itemtags
-            ON itemtags.tagid = tags.id
-            JOIN items
-            ON itemtags.itemid = items.id
-        where
-            items.id = $1`,
+        text: `SELECT tags.title, tags.id FROM tags
+                JOIN itemtags
+              ON itemtags.tagid = tags.id
+                JOIN items
+              ON itemtags.itemid = items.id
+            WHERE items.id = $1`,
         values: [id]
       }
       try {
@@ -173,7 +182,7 @@ module.exports = function(postgres) {
                 }
 
                 const tagsQuery = {
-                  text: `INSERT INTO itemtags (itemid, tagid) VALUES
+                  text: `INSERT INTO itemtags (tagid, itemid) VALUES
                   ${tagsQueryString(
                     [...tags],
                     itemid,
@@ -184,7 +193,7 @@ module.exports = function(postgres) {
 
                 try {
                   await client.query(tagsQuery)
-                }catch (e) {
+                } catch (e) {
                   throw 'No tags found'
                 }
 

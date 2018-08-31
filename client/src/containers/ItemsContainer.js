@@ -29,7 +29,7 @@ const userItemsData = ({ userId, render }) => (
        query={ALL_USER_ITEMS_QUERY}
        variables={{ id: userId || viewer.id }}
      >
-       {({ loading, error, data:{users} }) => render({ loading, error, users })}
+       {({ loading, error, data:{ users }= {} }) => render({ loading, error, users })}
      </Query>
     )}
     </ViewerContext.Consumer>

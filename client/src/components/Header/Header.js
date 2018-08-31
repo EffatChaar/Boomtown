@@ -11,7 +11,7 @@ import styles from './styles'
 
 
 function Header(props) {
-  const { classes }= props
+  const { classes } = props
 
   return (
     <div className={classes.root} >
@@ -21,7 +21,11 @@ function Header(props) {
             <img
               src= {Boomtown}
               alt= 'Boomtown-logo'
-              style= {{display:'inline', maxHeight:'50px'}}
+              style= {{
+                display:'inline',
+                width: 50,
+                height: 50,
+                maxHeight:'50px'}}
               />
           </Link>
 

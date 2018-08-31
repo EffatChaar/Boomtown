@@ -63,7 +63,7 @@ module.exports = function(app) {
 
     Item: {
 
-      async itemowner(parent, id, { pgResource }, info) {
+      async itemowner(parent, { id }, { pgResource }, info) {
         try {
           const itemOwner = await pgResource.getUserById(parent.ownerid)
           return itemOwner
@@ -81,12 +81,18 @@ module.exports = function(app) {
         }
      
       },
-      async borrower(parent, args, { pgResource }, info) {
+      async borrower(parent, { id }, { pgResource }, info) {
       try {
         const itemBorrower = await pgResource.getUserById(parent.borrowerid)
         return itemBorrower
         } catch (e) {
           throw new ApolloError(e)
+        }
+      },
+      async imageurl({ imageurl, imageid, mimetype, data }) {
+        if (imageurl) return imageurl
+        if (imageid) {
+          return `data:${mimetype};base64, ${data}`
         }
       }
     },
@@ -102,7 +108,7 @@ module.exports = function(app) {
           image: image,
           user
         })
-        return newItem;
+        return newItem
       }
     }
   }

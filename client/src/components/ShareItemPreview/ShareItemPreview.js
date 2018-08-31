@@ -8,22 +8,24 @@ import styles from './styles'
 
 
 const ShareItemPreview = props => {
-  <ViewerContext.Consumer>
+  return(
+      <ViewerContext.Consumer>
     {({ viewer }) => {
       props.shareItemPreview.itemowner = {
         fullname: viewer.fullname,
         email: viewer.email
       }
-      return <ItemCard item={props.shareItemPreview} />
+      return <ItemCard item= {props.shareItemPreview} />
     }}
     </ViewerContext.Consumer>
+  )
+
 }
 
-const mapStateToProps = state => {
-  return {
+const mapStateToProps = state => ({
     shareItemPreview: state.shareItemPreview
-  }
-}
+  })
+
 
 ShareItemPreview.propTypes = {
   classes: PropTypes.object.isRequired,
