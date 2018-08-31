@@ -9,7 +9,7 @@ import styles from './styles'
 function AddButton(props) {
   const { classes } = props;
   return (
-    <div>
+    <div className= {classes.component}>
       <Button
         variant='extendedFab'
         mini color='secondary'

@@ -33,6 +33,7 @@ class LongMenu extends React.Component {
           aria-owns= {anchorEl ? 'long-menu' : null}
           aria-haspopup= 'true'
           onClick= {this.handleClick}
+          style= {{ position: 'relative', top: '-35px', right: '-120px'}}
         >
           <MoreVertIcon />
         </IconButton>

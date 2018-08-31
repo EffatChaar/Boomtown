@@ -7,6 +7,7 @@ import styles from './styles'
 
 const Share = ({ classes }) => {
   return (
+    <div className= {classes.mainPage}>
       <Grid
         container
         spacing= {24}
@@ -27,11 +28,12 @@ const Share = ({ classes }) => {
         >
           <Typography
             variant= 'headline'>
-            CHEESE. CHEESE. CHEESE.
+            Share Your Item Here
           </Typography>
           <ShareItemForm />
         </Grid>
       </Grid>
+      </div>
   )
 }
 
