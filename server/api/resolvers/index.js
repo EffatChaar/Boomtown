@@ -23,7 +23,7 @@ module.exports = function(app) {
           throw new ApolloError(e)
         }
       },
-      async items(parent,{ filter }, { pgResource }, info) {
+      async items(parent, { filter }, { pgResource }, info) {
         try {
           const items = await pgResource.getItems(filter)
           return items

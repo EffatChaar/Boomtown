@@ -36,8 +36,8 @@ export const ITEM_QUERY = gql`
 `
 
 export const ALL_ITEMS_QUERY = gql`
-  query ($id: ID) {
-    items (filter: $id) {
+  query ($filter: ID) {
+    items (filter: $filter) {
       ...ItemFields
     }
   }
@@ -72,7 +72,7 @@ export const ALL_TAGS_QUERY = gql`
 `
 
 export const ADD_ITEM_MUTATION = gql`
-  mutation addItem($item: NewItemInput!, $image: Upload) {
+  mutation addItem($item: NewItemInput!, $image: Upload!) {
     addItem(item: $item, image: $image) {
       id
     }

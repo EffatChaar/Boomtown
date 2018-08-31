@@ -60,14 +60,14 @@ getTags = tags => {
   return []
 }
 
-async saveItem(values, tags, addItem, form) {
+async saveItem(values, addItem, form) {
   const {
     validity,
     files: [file]
   } = this.fileInput.current
 
   if (!validity.valid) return
-  // const tags = this.getTags(values.tags)
+  const tags = this.getTags(values.tags)
     try {
       const itemData = {
         ...values,
@@ -82,7 +82,7 @@ async saveItem(values, tags, addItem, form) {
       this.setState({ done: true })
       this.props.resetImage()
       this.props.resetNewItem()
-      form.reset()
+      // form.reset()
     } catch(e) {
       throw ('Error saving item')
   }
@@ -147,7 +147,7 @@ dispatchUpdate(values, updateNewItem) {
                           variant= 'contained'
                           color= 'primary'
                           onClick= {
-                            this.fileSelected ? () => {
+                            fileSelected ? () => {
                               this.setState({ fileSelected: false })
                               this.fileInput.current.value = ''
                               resetImage()

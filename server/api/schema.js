@@ -83,9 +83,9 @@ module.exports = gql`
       image: Upload
     ): Item
     signup(
-     user: SignupInput!): User
+     user: SignupInput!): User!
     login(
-      user: LoginInput!): Boolean!
+      user: LoginInput!): User
     logout: Boolean
   }
 `

@@ -19,7 +19,8 @@ const styles = theme => ({
         backgroundColor: 'transparent',
         position: 'relative',
         left: '-180px',
-        top: '10px'
+        top: '10px',
+        color: '#000000'
       }
 })
 

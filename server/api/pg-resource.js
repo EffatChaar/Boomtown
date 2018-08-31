@@ -67,7 +67,7 @@ module.exports = function(postgres) {
       const items = await postgres.query({
         text: `SELECT item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
                 FROM items item
-                INNER JOIN uploads upload
+                LEFT JOIN uploads upload
                 ON upload.itemid = item.id             
               WHERE (item.ownerid != $1 AND item.borrowerid IS NULL) OR ($1 IS NULL)`,
         values: [idToOmit]
@@ -84,7 +84,7 @@ module.exports = function(postgres) {
         const items = await postgres.query({
           text: `SELECT item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
                   FROM items item
-                  INNER JOIN uploads upload
+                  LEFT JOIN uploads upload
                   ON upload.itemid = item.id
                 WHERE item.ownerid = $1`,
           values: [id]
@@ -101,7 +101,7 @@ module.exports = function(postgres) {
         const items = await postgres.query({
         text: `SELECT item.id, item.title, item.description, item.created, item.ownerid, item.borrowerid, upload.data as imageurl
                 FROM items item
-                INNER JOIN uploads upload
+                LEFT JOIN uploads upload
                 ON upload.itemid = item.id
               WHERE item.borrowerid = $1`,
         values: [id]
@@ -164,7 +164,7 @@ module.exports = function(postgres) {
 
                 const imageUploadQuery = {
                   text:
-                    'INSERT INTO uploads (itemid, filename, mimetype, encoding, data) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                    `INSERT INTO uploads (itemid, filename, mimetype, encoding, data) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
                   values: [
                     itemid,
                     image.filename,
@@ -173,11 +173,11 @@ module.exports = function(postgres) {
                     base64Str
                   ]
                 }
-                try {
+                // try {
                   await client.query(imageUploadQuery)
-                } catch (e) {
-                  throw 'No image uploaded'
-                }
+                // } catch (e) {
+                //   throw 'No image uploaded'
+                // }
 
                 const tagsQuery = {
                   text: `INSERT INTO itemtags (tagid, itemid) VALUES

@@ -37,8 +37,7 @@ function Header(props) {
               <Button
                 className= {classes.shareButton}
                 variant= 'extendedFab'
-                color= 'black'
-                component= {Link}
+                // component= {Link}
                 to= '/share'
               >
             <Icon style={{ margin: '20px' }} /> SHARE SOMETHING
